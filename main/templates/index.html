@@ -1,0 +1,403 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anuj Shilpi Portfolio</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        body { font-family: Arial; scroll-behavior: smooth; margin: 0; padding: 0; }
+        
+        #menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1200;
+            cursor: pointer;
+            background: #212529;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #menu-text { font-size: 16px; font-weight: bold; display: none; }
+
+        .sidebar { 
+            width: 250px; 
+            height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+            transition: 0.4s ease; 
+            z-index: 1050; 
+            overflow-y: auto;
+            padding-top: 60px !important; 
+        }
+        
+        .sidebar-closed { left: -250px; }
+
+        #pin-icon {
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+            color: #0d6efd; 
+        }
+
+        .nav-link.active { background: #0d6efd; border-radius: 5px; }
+        .nav-link:hover { background: #0d6efd; border-radius: 5px; }
+        .section { padding: 60px 0; }
+        .project-buttons { display: none; }
+        .social-icons a { font-size: 20px; transition: 0.3s; text-decoration: none; }
+        .social-icons a:hover { transform: scale(1.3); }
+        .icon-text { font-size: 11px; margin-top: 3px; color: white; }
+        
+        .profile-big { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 4px solid #0d6efd; 
+            cursor: pointer;
+            transition: all 0.4s ease-in-out !important;
+        }
+        .profile-big:hover {
+            transform: scale(1.2); 
+            box-shadow: 0 0 20px rgba(13, 110, 253, 0.6);
+        }
+
+        #main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            transition: 0.4s ease;
+            padding-top: 20px;
+        }
+        .content-full { margin-left: 0 !important; width: 100% !important; }
+
+        #typing {
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.1));
+        }
+
+        /* Internship Circular Styles [cite: 1] */
+        .intern-circle {
+            width: 150px; height: 150px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.4s ease-in-out;
+            color: white; text-align: center; padding: 15px;
+            background: linear-gradient(135deg, #0d6efd, #00b4d8);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto;
+        }
+        .ds-circle { background: linear-gradient(135deg, #ff4b2b, #ff416c); }
+        .sf-circle { background: linear-gradient(135deg, #8e2de2, #4a00e0); }
+        .intern-circle:hover { transform: scale(1.15); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .intern-text { font-weight: bold; font-size: 1.1rem; }
+        .intern-buttons { display: none; margin-top: 10px; animation: fadeInCircle 0.4s ease; }
+        .intern-buttons a { margin: 2px; font-size: 0.75rem; }
+        @keyframes fadeInCircle { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body>
+
+    <div id="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+        <span id="menu-text">Menu</span>
+    </div>
+
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+        <button class="btn btn-outline-primary shadow bg-white" onclick="showDeveloper()">
+            <i class="fas fa-code"></i> Developer
+        </button>
+    </div>
+
+    <div class="d-flex">
+        <div id="mySidebar" class="sidebar bg-dark text-white p-3">
+            <div class="d-flex justify-content-end align-items-center mb-2">
+                <div id="pin-icon" onclick="togglePin()">
+                    <i class="fas fa-thumbtack"></i>
+                </div>
+            </div>
+
+            <div class="social-icons">
+                <h6 class="text-center mb-2">Connect Through</h6>
+                <div class="d-flex justify-content-between mb-3 text-center">
+                    <div><a href="https://www.linkedin.com/in/anuj-shilpi77/"><i class="fab fa-linkedin"></i></a><div class="icon-text">LinkedIn</div></div>
+                    <div><a href="https://www.naukri.com/mnjuser/profile?id=&altresid"><i class="fas fa-briefcase"></i></a><div class="icon-text">Naukri</div></div>
+                    <div><a href="https://www.foundit.in/seeker/profile"><i class="fas fa-globe"></i></a><div class="icon-text">Foundit</div></div>
+                    <div><a href="https://profile.indeed.com/?hl=en_IN&co=IN&from=gnav-homepage"><i class="fas fa-search"></i></a><div class="icon-text">Indeed</div></div>
+                </div>
+                <div class="d-flex justify-content-between text-center">
+                    <div><a href="https://www.instagram.com/anuj_shilpi876/"><i class="fab fa-instagram"></i></a><div class="icon-text">Instagram</div></div>
+                    <div><a href="https://www.facebook.com/anuj.shilpi.98/"><i class="fab fa-facebook"></i></a><div class="icon-text">Facebook</div></div>
+                    <div><a href="https://leetcode.com/u/Anuj_Shilpi/"><i class="fas fa-code"></i></a><div class="icon-text">LeetCode</div></div>
+                    <div><a href="https://github.com/AnujShilpi121?tab=repositories"><i class="fab fa-github"></i></a><div class="icon-text">GitHub</div></div>
+                </div>
+            </div>
+            <hr>
+            <ul class="nav flex-column">
+                <li><a class="nav-link text-white" href="#home" onclick="handleLinkClick()">Home</a></li>
+                <li><a class="nav-link text-white" href="#about" onclick="handleLinkClick()">About</a></li>
+                <li><a class="nav-link text-white" href="#education" onclick="handleLinkClick()">Education</a></li>
+                <li><a class="nav-link text-white" href="#skills" onclick="handleLinkClick()">Skills</a></li>
+                <li><a class="nav-link text-white" href="#projects" onclick="handleLinkClick()">Projects</a></li>
+                <li><a class="nav-link text-white" href="#internships" onclick="handleLinkClick()">Internships</a></li>
+                <li><a class="nav-link text-white" href="#certifications" onclick="handleLinkClick()">Certifications</a></li>
+                <li><a class="nav-link text-white" href="#resume" onclick="handleLinkClick()">Resume</a></li>
+                <li><a class="nav-link text-white" href="#contact" onclick="handleLinkClick()">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="main-content" class="p-4">
+            <section id="home" class="section text-center" data-aos="fade-down">
+                <a href="{% static 'images/my image final1.png' %}" target="_blank">
+                    <img src="{% static 'images/profile.png' %}" class="profile-big mb-3">
+                </a>
+                <h1 id="developer-name"><b>ANUJ SHILPI</b></h1>
+                <h4><span id="typing"></span></h4>
+            </section>
+
+            <section id="about" class="section" data-aos="fade-up">
+                <h2 style="font-weight: bold;">About</h2>
+                <p>Highly motivated Computer Science and Engineering student specializing in AI and Machine Learning at Lakshmi Narain College of Technology. I possess a strong technical foundation in Python, Machine Learning, Deep Learning, C++, and SQL, complemented by hands-on experience in developing intelligent systems such as DeepFake Detection and Real-Time Forest Fire Detection.</p>
+                <p>My technical expertise includes:</p>
+                    <p><b>*</b> Machine Learning & DL: Proficient in developing and deploying predictive models using CNNs, TensorFlow, and NLTK. Notable projects include a DeepFake Detection System and a Real-Time Forest Fire Detection tool integrated with OpenCV.</p>
+                   <p> <b>*</b> Python Ecosystem: Extensive experience with NumPy, Pandas, Matplotlib, and Sklearn for data preprocessing and exploratory analysis.</p>
+                    <p><b>*</b> Web & Database Management: Skilled in MySQL for structured data management and Django or Streamlit for creating functional user interfaces.</p>
+                    <p><b>*</b> Industry Experience: Completed internships with Wipro TalentNext and AICTE, focusing on Green AI and professional data science workflows.</p>
+                <p>I am a Salesforce Certified Agentforce Specialist and an AWS Academy Graduate, dedicated to leveraging my programming skills to solve complex real-world problems.</p>
+            </section>
+
+            <section id="education" class="section" data-aos="fade-right">
+      <h2 class="mb-4" style="font-weight: bold;">Education</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered custom-edu-table">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Institute / Board</th>
+                    <th>Score / CGPA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>B.Tech (CSE AIML)</td>
+                    <td>LNCT Bhopal (2022–2026)</td>
+                    <td>7.83 CGPA</td>
+                </tr>
+                <tr>
+                    <td>12th Standard</td>
+                    <td>Govt. Boys Higher Secondary School  (MP BOARD)</td>
+                    <td>90.4%</td>
+                </tr>
+                <tr>
+                    <td>10th Standard</td>
+                    <td>Gurukul Convent Hr. Sec. School  (CBSE BOARD)</td>
+                    <td>79.4%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+            <section id="skills" class="section" data-aos="fade-left">
+                <h2 style="font-weight: bold;">Skills</h2>
+                <p>Python</p>
+                <div class="progress mb-3"><div class="progress-bar bg-success" style="width:90%"></div></div>
+                <p>Machine Learning & Deep Learning</p>
+                <div class="progress mb-3"><div class="progress-bar bg-info" style="width:80%"></div></div>
+                   
+                <p>Django</p>
+                <div class="progress mb-3"><div class="progress-bar bg-warning" style="width:70%"></div></div>
+                <p>SQL / MySQL</p>
+                <div class="progress mb-3"><div class="progress-bar bg-danger" style="width:80%"></div></div>
+                <p>C++ / OOPS </p>
+                <div class="progress mb-3"><div class="progress-bar bg-info" style="width:85%"></div></div>
+                
+            </section>
+
+            <section id="projects" class="section" data-aos="zoom-in">
+                <h2 style="font-weight: bold;">Projects</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card p-3 project-card" onclick="toggleButtons(this)">
+                            <h5>DeepFake Detection System</h5>
+                            <p>ML + DL based CNN model to detect fake content.</p>
+                            <div class="project-buttons mt-2">
+                                <a href="https://github.com/AnujShilpi121/deepfake-streamlit-app/blob/main/README.md" class="btn btn-success btn-sm">Run</a>
+                                <a href="https://github.com/AnujShilpi121/deepfake-streamlit-app.git" class="btn btn-dark btn-sm">Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 project-card" onclick="toggleButtons(this)">
+                            <h5>Forest Fire Detection</h5>
+                            <p>Real-time CNN + OpenCV + Django system.</p>
+                            <div class="project-buttons mt-2">
+                                <a href="https://github.com/AnujShilpi121/fire_detection_app/blob/master/README.md" class="btn btn-success btn-sm">Run</a>
+                                <a href="https://github.com/AnujShilpi121/FOREST_FIRE_DETECTION.git" class="btn btn-dark btn-sm">Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 project-card" onclick="toggleButtons(this)">
+                            <h5>Quiz Generator System</h5>
+                            <p>MCQ system using MySQL with auto evaluation.</p>
+                            <div class="project-buttons mt-2">
+                                <a href="https://github.com/AnujShilpi121/IT_TRAINING_PYTHON_ASSIGNMENT_AND_PROJECTS/blob/master/README.md" class="btn btn-success btn-sm">Run</a>
+                                <a href="https://github.com/AnujShilpi121/IT_TRAINING_PYTHON_ASSIGNMENT_AND_PROJECTS.git" class="btn btn-dark btn-sm">Code</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="internships" class="section" data-aos="fade-up">
+                <h2 style="font-weight: bold;">Internships</h2>
+                <div class="row text-center justify-content-center">
+                    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+                        <div class="intern-circle" onclick="toggleInternButtons(this)">
+                            <div class="intern-text">AI Intern</div>
+                            <div class="intern-buttons">
+                                <a href="{% static 'internships/aicte.pdf' %}" target="_blank" class="btn btn-light btn-sm">View</a>
+                                <a href="{% static 'internships/aicte.pdf' %}" download class="btn btn-outline-light btn-sm">Download</a>
+                            </div>
+                        </div>
+                        <p class="mt-3 fw-bold">AICTE & Edunet Foundation</p>
+                    </div>
+                    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+                        <div class="intern-circle ds-circle" onclick="toggleInternButtons(this)">
+                            <div class="intern-text">Data Science</div>
+                            <div class="intern-buttons">
+                                <a href="{% static 'internships/talentnext.pdf' %}" target="_blank" class="btn btn-light btn-sm">View</a>
+                                <a href="{% static 'internships/talentnext.pdf' %}" download class="btn btn-outline-light btn-sm">Download</a>
+                            </div>
+                        </div>
+                        <p class="mt-3 fw-bold">Wipro TalentNext</p>
+                    </div>
+                    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+                        <div class="intern-circle sf-circle" onclick="toggleInternButtons(this)">
+                            <div class="intern-text">Salesforce</div>
+                            <div class="intern-buttons">
+                                <a href="{% static 'internships/salesforce.pdf' %}" target="_blank" class="btn btn-light btn-sm">View</a>
+                                <a href="{% static 'internships/salesforce.pdf' %}" download class="btn btn-outline-light btn-sm">Download</a>
+                            </div>
+                        </div>
+                        <p class="mt-3 fw-bold">Agentblazer Program</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="certifications" class="section" data-aos="fade-up">
+    <h2 style="font-weight: bold;">Certifications</h2>
+    <div class="cert-strip shadow">
+        <a href="https://www.linkedin.com/in/anuj-shilpi77/recent-activity/all/" target="_blank">View Certificates <-- (link)</a>
+    </div>
+</section>
+
+            <section id="resume" class="section text-center">
+                <h2 style="font-weight: bold;">Resume</h2>
+                <a href="{% static 'resume/anujresume.pdf' %}" target="_blank" class="btn btn-primary">View</a>
+                <a href="{% static 'resume/anujresume.pdf' %}" download class="btn btn-success">Download</a>
+            </section>
+
+            <section id="contact" class="section">
+                <h2 style="font-weight: bold;">Contact</h2>
+                <p>Email: anujshilpi66@gmail.com</p>
+                <p>Phone: +91-8120052328</p>
+                <p>Location: Bhopal, MP</p>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        
+        new Typed("#typing", {
+            strings: [
+                '<span style="color: #0d6efd;">Python Developer</span>', 
+                '<span style="color: #ff0080;">AI/ML Engineer</span>', 
+                '<span style="color: #6f42c1;">Django Developer</span>'
+            ],
+            typeSpeed: 60,
+            backSpeed: 40,
+            loop: true,
+            contentType: 'html'
+        });
+
+        let isPinned = true;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("mySidebar");
+            const content = document.getElementById("main-content");
+            const menuText = document.getElementById("menu-text");
+            sidebar.classList.toggle("sidebar-closed");
+            content.classList.toggle("content-full");
+            if (sidebar.classList.contains("sidebar-closed")) {
+                menuText.style.display = "inline";
+            } else {
+                menuText.style.display = "none";
+            }
+        }
+
+        function togglePin() {
+            isPinned = !isPinned;
+            const pinIcon = document.querySelector("#pin-icon i");
+            pinIcon.style.color = isPinned ? "#0d6efd" : "white";
+            pinIcon.style.transform = isPinned ? "rotate(0deg)" : "rotate(-45deg)";
+        }
+
+        window.onscroll = function() {
+            if (!isPinned) {
+                const sidebar = document.getElementById("mySidebar");
+                if (!sidebar.classList.contains("sidebar-closed")) {
+                    toggleSidebar();
+                }
+            }
+        };
+
+        function handleLinkClick() { if (!isPinned) toggleSidebar(); }
+        
+        function toggleButtons(card) {
+            const btns = card.querySelector(".project-buttons");
+            btns.style.display = btns.style.display === "block" ? "none" : "block";
+        }
+
+        /* Logic for Internships circles [cite: 1] */
+        function toggleInternButtons(circle) {
+            const text = circle.querySelector(".intern-text");
+            const btns = circle.querySelector(".intern-buttons");
+            if (btns.style.display === "block") {
+                btns.style.display = "none";
+                text.style.display = "block";
+            } else {
+                btns.style.display = "block";
+                text.style.display = "none";
+            }
+        }
+
+        function showDeveloper() {
+            const nameElement = document.getElementById('developer-name');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                nameElement.classList.add('highlight-active');
+                setTimeout(() => { 
+                    nameElement.classList.remove('highlight-active'); 
+                }, 5000);
+            }, 600);
+        }
+    </script>
+</body>
+</html>
